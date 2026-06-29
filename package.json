@@ -1,0 +1,12 @@
+{
+  "name": "resume-analyzer",
+  "version": "1.0.0",
+  "description": "A full-stack web app that lets users upload resumes and get AI-powered analysis.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
