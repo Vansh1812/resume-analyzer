@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.x.x",
+    "express": "^4.x.x",
+    "express-rate-limit": "^7.x.x",
+    "helmet": "^7.x.x",
+    "jsonwebtoken": "^9.x.x",
+    "knex": "^3.x.x",
+    "morgan": "^1.x.x",
+    "pg": "^8.x.x",
+    "uuid": "^9.x.x",
+    "zod": "^3.x.x"
+  },
+  "devDependencies": {
+    "nodemon": "^3.x.x"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
