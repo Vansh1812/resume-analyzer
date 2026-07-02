@@ -10,3 +10,7 @@ build/
 *.log
 lambda/*.zip
 .DS_Store
+lambda/.env
+lambda/*.zip
+
+awscliv2.zip
