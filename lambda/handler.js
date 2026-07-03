@@ -26,7 +26,6 @@ const extractTextFromPDF = (buffer) => new Promise((resolve, reject) => {
   new PdfReader().parseBuffer(buffer, (err, item) => {
     if (err) return reject(err);
     if (!item) {
-      // End of file — join all rows
       const text = Object.keys(rows)
         .sort((a, b) => a - b)
         .map(y => rows[y].join(' '))
@@ -52,14 +51,32 @@ exports.handler = async (event) => {
   const db = await getDb();
 
   try {
-    // Step 1: Update status to processing
-    await db.query(
-      "UPDATE resumes SET status = 'processing' WHERE s3_key = $1",
+    // Find resume by s3_key — log what we find
+    const resumeResult = await db.query(
+      'SELECT id, s3_key, status FROM resumes WHERE s3_key = $1',
       [key]
+    );
+    console.log('DB lookup result:', JSON.stringify(resumeResult.rows));
+
+    if (resumeResult.rows.length === 0) {
+      console.error('No resume found with s3_key:', key);
+      console.log('Checking all resumes in DB...');
+      const allResumes = await db.query('SELECT id, s3_key FROM resumes ORDER BY created_at DESC LIMIT 5');
+      console.log('Latest resumes:', JSON.stringify(allResumes.rows));
+      throw new Error(`No resume found with s3_key: ${key}`);
+    }
+
+    const resumeId = resumeResult.rows[0].id;
+    console.log('Found resume ID:', resumeId);
+
+    // Update status to processing
+    await db.query(
+      'UPDATE resumes SET status = $1 WHERE id = $2',
+      ['processing', resumeId]
     );
     console.log('Status: processing');
 
-    // Step 2: Download PDF from S3
+    // Download PDF from S3
     const s3Response = await s3.send(new GetObjectCommand({
       Bucket: bucket,
       Key: key
@@ -67,11 +84,11 @@ exports.handler = async (event) => {
     const pdfBuffer = await streamToBuffer(s3Response.Body);
     console.log('PDF downloaded, size:', pdfBuffer.length);
 
-    // Step 3: Extract text
+    // Extract text
     const rawText = await extractTextFromPDF(pdfBuffer);
     console.log('Text extracted, length:', rawText.length);
 
-    // Step 4: Analyze
+    // Analyze
     const skills = extractSkills(rawText);
     const experienceYears = extractExperience(rawText);
     const score = calculateScore(rawText, skills);
@@ -79,27 +96,34 @@ exports.handler = async (event) => {
 
     console.log('Skills:', skills);
     console.log('Score:', score);
+    console.log('Feedback:', feedback);
 
-    // Step 5: Save to DB
+    // Delete any existing analysis for this resume
+    await db.query(
+      'DELETE FROM analyses WHERE resume_id = $1',
+      [resumeId]
+    );
+
+    // Save analysis using resume ID directly
     await db.query(
       `INSERT INTO analyses
         (resume_id, raw_text, skills, experience_years, score, feedback)
-       SELECT id, $1, $2, $3, $4, $5
-       FROM resumes WHERE s3_key = $6`,
+       VALUES ($1, $2, $3, $4, $5, $6)`,
       [
+        resumeId,
         rawText,
         JSON.stringify(skills),
         experienceYears,
         score,
-        JSON.stringify(feedback),
-        key
+        JSON.stringify(feedback)
       ]
     );
+    console.log('Analysis saved to DB');
 
-    // Step 6: Mark done
+    // Update status to done
     await db.query(
-      "UPDATE resumes SET status = 'done' WHERE s3_key = $1",
-      [key]
+      'UPDATE resumes SET status = $1 WHERE id = $2',
+      ['done', resumeId]
     );
     console.log('Analysis complete:', key);
 
