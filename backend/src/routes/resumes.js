@@ -10,6 +10,7 @@ const router = express.Router();
 
 // ─── POST /api/resumes/presign ────────────────────────
 // Generate a presigned S3 URL for direct browser upload
+// POST /api/resumes/presign — create DB record AND get upload URL
 router.post('/presign', auth, async (req, res) => {
   try {
     const { filename, contentType } = req.body;
@@ -17,7 +18,6 @@ router.post('/presign', auth, async (req, res) => {
     if (!filename || !contentType)
       return res.status(400).json({ error: 'filename and contentType required' });
 
-    // Only allow PDF and DOCX
     const allowed = [
       'application/pdf',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -28,23 +28,37 @@ router.post('/presign', auth, async (req, res) => {
     // Create unique S3 key
     const key = `users/${req.user.userId}/resumes/${uuidv4()}-${filename}`;
 
+    // Create DB record FIRST before generating upload URL
+    const [resume] = await db('resumes')
+      .insert({
+        user_id: req.user.userId,
+        s3_key: key,
+        filename,
+        status: 'pending'
+      })
+      .returning('*');
+
+    // Then generate presigned URL
     const command = new PutObjectCommand({
       Bucket: process.env.S3_BUCKET_NAME,
       Key: key,
       ContentType: contentType
     });
 
-    // Generate URL valid for 5 minutes
     const signedUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
 
-    res.json({ signedUrl, key });
+    // Return everything frontend needs
+    res.json({
+      signedUrl,
+      key,
+      resumeId: resume.id
+    });
 
   } catch (err) {
     console.error('Presign error:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
-
 // ─── POST /api/resumes ────────────────────────────────
 // Register resume in DB after successful S3 upload
 router.post('/', auth, async (req, res) => {
