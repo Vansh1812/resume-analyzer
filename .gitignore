@@ -14,3 +14,6 @@ lambda/.env
 lambda/*.zip
 
 awscliv2.zip
+backend/.env
+frontend/.env
+lambda/.env
