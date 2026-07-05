@@ -15,7 +15,10 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    process.env.FRONTEND_URL || 'http://localhost:5173'
+  ],
   credentials: true
 }));
 
@@ -48,7 +51,12 @@ const uploadLimiter = rateLimit({
 
 // ─── Health Check ─────────────────────────────────────
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    environment: process.env.NODE_ENV || 'development',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  });
 });
 
 // ─── Routes ───────────────────────────────────────────
