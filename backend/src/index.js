@@ -8,29 +8,38 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// ─── CORS ─────────────────────────────────────────────
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://d338lzjuxj3nfq.cloudfront.net',
+  'http://resume-analyzer-frontend-425182212735.s3-website.ap-south-1.amazonaws.com',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
+
 // ─── Security Middleware ──────────────────────────────
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false
 }));
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    process.env.FRONTEND_URL || 'http://localhost:5173'
-  ],
-  credentials: true
-}));
-
 app.use(express.json({ limit: '10kb' }));
 app.use(morgan('dev'));
 
-// Sanitize input
 const sanitize = require('./middleware/sanitize');
 app.use(sanitize);
 
 // ─── Rate Limiters ────────────────────────────────────
-// Only limit auth routes — 10 attempts per 15 minutes
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
@@ -39,14 +48,13 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
-// Upload limiter — 50 per hour (more generous for testing)
 const uploadLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 50,
   message: { error: 'Upload limit reached. Try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => req.method === 'GET' // Don't limit GET requests
+  skip: (req) => req.method === 'GET'
 });
 
 // ─── Health Check ─────────────────────────────────────
