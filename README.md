@@ -4,9 +4,9 @@ A full-stack AI-powered resume analysis web application built with React, Node.j
 
 ## Live Demo
 
-- **Frontend:** https://your-cloudfront-url.cloudfront.net
-- **Backend API:** https://resume-analyzer-backend.onrender.com
-- **Health Check:** https://resume-analyzer-backend.onrender.com/health
+- **Frontend:** https://d338lzjuxj3nfq.cloudfront.net/login
+- **Backend API:** https://resume-analyzer-1d5t.onrender.com/
+- **Health Check:**https://resume-analyzer-1d5t.onrender.com/health
 
 ## What it does
 
