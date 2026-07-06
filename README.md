@@ -4,9 +4,9 @@ A full-stack AI-powered resume analysis web application built with React, Node.j
 
 ## Live Demo
 
-- **Frontend:** https://your-cloudfront-url.cloudfront.net
-- **Backend API:** https://resume-analyzer-backend.onrender.com
-- **Health Check:** https://resume-analyzer-backend.onrender.com/health
+- **Frontend:** https://d338lzjuxj3nfq.cloudfront.net/login
+- **Backend API:** https://resume-analyzer-1d5t.onrender.com/
+- **Health Check:**https://resume-analyzer-1d5t.onrender.com/health
 
 ## What it does
 
@@ -18,6 +18,27 @@ Upload your resume (PDF) and get instant AI-powered analysis including:
 - Strengths and areas for improvement
 - Detailed actionable feedback
 - Downloadable PDF analysis report
+
+  #### Screenshots
+
+### Login Page
+![Login Page](./docs/screenshots/login.png)
+
+### Dashboard
+![Dashboard](./docs/screenshots/dashboard.png)
+
+### Upload Resume
+![Upload Page](./docs/screenshots/upload.png)
+
+### Analysis Results — Score & Skills
+![Analysis Score](./docs/screenshots/analysis-score.png)
+
+### Analysis Results — Feedback & Improvements
+![Analysis Feedback](./docs/screenshots/analysis-feedback.png)
+
+### PDF Report Download
+![PDF Report](./docs/screenshots/pdf-report.png)
+
 
 ## Tech Stack
 
