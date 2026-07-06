@@ -19,6 +19,27 @@ Upload your resume (PDF) and get instant AI-powered analysis including:
 - Detailed actionable feedback
 - Downloadable PDF analysis report
 
+  #### Screenshots
+
+### Login Page
+![Login Page](./docs/screenshots/login.png)
+
+### Dashboard
+![Dashboard](./docs/screenshots/dashboard.png)
+
+### Upload Resume
+![Upload Page](./docs/screenshots/upload.png)
+
+### Analysis Results — Score & Skills
+![Analysis Score](./docs/screenshots/analysis-score.png)
+
+### Analysis Results — Feedback & Improvements
+![Analysis Feedback](./docs/screenshots/analysis-feedback.png)
+
+### PDF Report Download
+![PDF Report](./docs/screenshots/pdf-report.png)
+
+
 ## Tech Stack
 
 ### Frontend
