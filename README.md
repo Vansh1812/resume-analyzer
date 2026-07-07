@@ -40,6 +40,10 @@ Upload your resume (PDF) and get instant AI-powered analysis including:
 ![PDF Report](./docs/screenshots/pdf-report.png)
 
 
+## Demo Video
+[![Resume Analyzer Demo](./docs/screenshots/dashboard.png)](https://youtu.be/wziRy_Zvm8E)
+*Click the image to watch the demo video*
+
 ## Tech Stack
 
 ### Frontend
