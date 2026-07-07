@@ -41,8 +41,20 @@ Upload your resume (PDF) and get instant AI-powered analysis including:
 
 
 ## Demo Video
-[![Resume Analyzer Demo](./docs/screenshots/dashboard.png)](https://youtu.be/wziRy_Zvm8E)
-*Click the image to watch the demo video*
+[![Resume Analyzer Demo](https://youtu.be/wziRy_Zvm8E)
+
+
+## Note on Live Demo
+
+AWS services (RDS, Lambda, CloudFront) are paused to avoid costs on the free tier. To see the project in action, watch the demo video above which shows the complete user journey including:
+- User registration with password validation
+- Resume upload directly to AWS S3
+- Real-time Lambda processing with CloudWatch logs
+- Full analysis results (skills, score, education, feedback)
+- PDF report download
+- AWS Console walkthrough showing the cloud architecture
+
+To run locally, follow the Local Setup instructions above.
 
 ## Tech Stack
 
