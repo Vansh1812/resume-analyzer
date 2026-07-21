@@ -51,7 +51,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-blue-600">Resume Analyzer</h1>
+        <h1 className="text-xl font-bold text-blue-600">Resume Analyzer </h1>
         <div className="flex items-center gap-4">
           <span className="text-sm text-gray-500">{user?.email}</span>
           <button onClick={handleLogout} className="text-sm text-red-500 hover:underline">
